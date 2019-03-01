@@ -1,4 +1,4 @@
-module holdno.com/gocommons
+module github.com/holdno/gocommons
 
 go 1.12
 
