@@ -51,3 +51,15 @@ func rotatelogsHook(logName string) logrus.Hook {
 func WithFields(fields logrus.Fields) *logrus.Entry {
 	return logInstance.WithFields(fields)
 }
+
+func Info(args ...interface{}) {
+	logInstance.Info(args)
+}
+
+func Error(args ...interface{}) {
+	logInstance.Error(args)
+}
+
+func Warn(args ...interface{}) {
+	logInstance.Warn(args)
+}
