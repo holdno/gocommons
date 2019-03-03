@@ -6,21 +6,23 @@ import (
 
 	"github.com/lestrrat-go/file-rotatelogs"
 	"github.com/rifflock/lfshook"
-	. "github.com/sirupsen/logrus"
+	"github.com/sirupsen/logrus"
 )
 
-var logInstance *Logger
+var logInstance *logrus.Logger
+
+type Fields logrus.Fields
 
 // 配置logger
 func Init(logDir, appName string) {
 
-	logInstance = New()
+	logInstance = logrus.New()
 	// json格式的log输出
 	logName := path.Join(logDir, appName)
 	logInstance.AddHook(rotatelogsHook(logName))
 }
 
-func rotatelogsHook(logName string) Hook {
+func rotatelogsHook(logName string) logrus.Hook {
 	writer, err := rotatelogs.New(
 		logName+".%Y%m%d",
 		rotatelogs.WithLinkName(logName),
@@ -37,11 +39,15 @@ func rotatelogsHook(logName string) Hook {
 		panic(err)
 	}
 	return lfshook.NewHook(lfshook.WriterMap{
-		DebugLevel: writer,
-		InfoLevel:  writer,
-		WarnLevel:  writer,
-		ErrorLevel: writer,
-		FatalLevel: writer,
-		PanicLevel: writer,
-	}, &JSONFormatter{})
+		logrus.DebugLevel: writer,
+		logrus.InfoLevel:  writer,
+		logrus.WarnLevel:  writer,
+		logrus.ErrorLevel: writer,
+		logrus.FatalLevel: writer,
+		logrus.PanicLevel: writer,
+	}, &logrus.JSONFormatter{})
+}
+
+func WithFields(fields logrus.Fields) *logrus.Entry {
+	return logInstance.WithFields(fields)
 }
