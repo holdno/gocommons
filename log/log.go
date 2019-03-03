@@ -11,8 +11,11 @@ import (
 
 var logInstance *logrus.Logger
 
+type Fields logrus.Fields
+
 // 配置logger
 func Init(logDir, appName string) {
+
 	logInstance = logrus.New()
 	// json格式的log输出
 	logName := path.Join(logDir, appName)
