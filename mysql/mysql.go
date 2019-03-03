@@ -18,15 +18,17 @@ var mysqlInstance *sql.DB
 func Init(conf *MysqlConfig) {
 	var (
 		err error
+		mc  mysql.Config
 	)
-	if mysqlInstance, err = sql.Open("mysql", mysql.Config{
+	mc = mysql.Config{
 		User:                 conf.User,
 		Passwd:               conf.Password,
 		Net:                  "tcp",
 		Addr:                 conf.Addr,
 		DBName:               conf.DBName,
 		AllowNativePasswords: true,
-	}.FormatDSN()); err != nil {
+	}
+	if mysqlInstance, err = sql.Open("mysql", mc.FormatDSN()); err != nil {
 		panic("Mysql init error" + err.Error())
 	}
 }
