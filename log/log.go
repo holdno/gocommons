@@ -48,8 +48,8 @@ func rotatelogsHook(logName string) logrus.Hook {
 	}, &logrus.JSONFormatter{})
 }
 
-func WithFields(fields logrus.Fields) *logrus.Entry {
-	return logInstance.WithFields(fields)
+func WithFields(fields Fields) *logrus.Entry {
+	return logInstance.WithFields(logrus.Fields(fields))
 }
 
 func Info(args ...interface{}) {
