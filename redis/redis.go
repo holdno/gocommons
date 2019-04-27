@@ -38,6 +38,7 @@ func GetConn() *redisMethod {
 // RLock redis分布式锁
 func RLock(key string, notWaiting ...bool) error {
 	redisConn := GetConn()
+	defer redisConn.Close()
 	i := 0
 	for {
 		ok, err := redisConn.SetNX(key, time.Now().Unix()+10)
@@ -79,6 +80,7 @@ func RLock(key string, notWaiting ...bool) error {
 // RUnLock 解除分布式锁
 func RUnLock(key string) error {
 	redisPool := context.GetRedisPool()
+	defer redisPool.Close()
 	_, err := redisPool.Del(key)
 	return err
 }
