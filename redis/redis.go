@@ -13,8 +13,8 @@ var redisInstance *redis.Pool
 
 func Init(address, password string) {
 	redisInstance = &redis.Pool{
-		MaxIdle:   5,
-		MaxActive: 10,
+		MaxIdle:   10,
+		MaxActive: 0,
 		Dial: func() (redis.Conn, error) {
 			c, err := redis.Dial("tcp", address, redis.DialPassword(password))
 			if err != nil {
