@@ -22,12 +22,6 @@ require (
 	github.com/rifflock/lfshook v0.0.0-20180920164130-b9218ef580f5
 	github.com/sirupsen/logrus v1.3.0
 	github.com/tebeka/strftime v0.0.0-20140926081919-3f9c7761e312 // indirect
-	gitlab.meitu.com/gocommons/cores v0.0.0-20180504023217-5584c8208beb // indirect
-	gitlab.meitu.com/gocommons/database v0.0.0-20180111075231-ce3664f41c60 // indirect
-	gitlab.meitu.com/gocommons/logbunny v2.0.1+incompatible // indirect
-	gitlab.meitu.com/gocommons/memcache v0.0.0-20180514091411-1d75040ce061 // indirect
-	gitlab.meitu.com/gocommons/redis-pool v0.0.0-20190121011801-3a3fd34f41aa // indirect
-	gitlab.meitu.com/mt-family/mtfamily-shop v0.0.0-20190131024743-23fb91c3c515 // indirect
 	go.uber.org/atomic v1.3.2 // indirect
 	go.uber.org/multierr v1.1.0 // indirect
 	go.uber.org/zap v1.9.1 // indirect
