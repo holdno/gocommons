@@ -17,7 +17,6 @@ const (
 	NotEquals       Operator = "!="
 	NotEqualsString Operator = "'!='"
 	NotIn           Operator = "NOT IN"
-	Exists          Operator = "exists"
 	GreaterThan     Operator = ">"
 	LessThan        Operator = "<"
 	Like            Operator = "LIKE"
