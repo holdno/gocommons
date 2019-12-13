@@ -4,7 +4,15 @@ import (
 	"bytes"
 	"fmt"
 	"strings"
+
+	"github.com/json-iterator/go"
 )
+
+var json jsoniter.API
+
+func init() {
+	json = jsoniter.ConfigCompatibleWithStandardLibrary
+}
 
 type Operator string
 
@@ -24,12 +32,12 @@ const (
 
 // Requirement contains values, a key, and an operator that relates the key and values.
 type Requirement struct {
-	key      string
-	operator Operator
+	Key      string `json:"k"`
+	Operator Operator `json:"o"`
 	// In huge majority of cases we have at most one value here.
 	// It is generally faster to operate on a single-element slice
 	// than on a single-element map, so we have a slice here.
-	values interface{}
+	Values interface{} `json:"v"`
 }
 
 func NewRequirement(key string, operator Operator, values interface{}) Requirement {
@@ -65,12 +73,12 @@ func (r Requirements) String() string {
 // returned. See NewRequirement for creating a valid Requirement.
 func (r *Requirement) Patch() (string, interface{}) {
 	var buffer bytes.Buffer
-	if r.operator == DoesNotExist {
+	if r.Operator == DoesNotExist {
 		buffer.WriteString("!")
 	}
-	buffer.WriteString(r.key)
+	buffer.WriteString(r.Key)
 
-	switch r.operator {
+	switch r.Operator {
 	case Equals, EqualString:
 		buffer.WriteString("=")
 	case DoubleEquals:
@@ -93,23 +101,36 @@ func (r *Requirement) Patch() (string, interface{}) {
 
 	buffer.WriteString("?")
 
-	switch r.operator {
+	switch r.Operator {
 	case In, NotIn:
 		buffer.WriteString(")")
 	case Like:
-		return buffer.String(), fmt.Sprintf("%%%v%%", r.values)
+		return buffer.String(), fmt.Sprintf("%%%v%%", r.Values)
 	}
 
-	return buffer.String(), r.values
+	return buffer.String(), r.Values
 }
 
 type Selector struct {
 	queryIndex int
-	Query      Requirements
-	Page       int
-	Pagesize   int
-	OrderBy    string
-	Select     string
+	Query      Requirements `json:"q,omitempty"`
+	Page       int `json:"p,omitempty"`
+	Pagesize   int `json:"ps,omitempty"`
+	OrderBy    string `json:"ob,omitempty"`
+	Select     string `json:"s,omitempty"`
+}
+
+func (s *Selector) ToBytes() []byte {
+	res, _ := json.Marshal(s)
+	return res
+}
+
+func ParseFromBytes(b []byte) (Selector, error) {
+	s := NewSelector()
+	if err := json.Unmarshal(b, &s); err != nil {
+		return Selector{}, err
+	}
+	return s, nil
 }
 
 func NewSelector(r ...Requirement) Selector {
