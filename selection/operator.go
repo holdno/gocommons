@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/json-iterator/go"
+	jsoniter "github.com/json-iterator/go"
 )
 
 var json jsoniter.API
@@ -32,7 +32,7 @@ const (
 
 // Requirement contains values, a key, and an operator that relates the key and values.
 type Requirement struct {
-	Key      string `json:"k"`
+	Key      string   `json:"k"`
 	Operator Operator `json:"o"`
 	// In huge majority of cases we have at most one value here.
 	// It is generally faster to operate on a single-element slice
@@ -114,10 +114,10 @@ func (r *Requirement) Patch() (string, interface{}) {
 type Selector struct {
 	queryIndex int
 	Query      Requirements `json:"q,omitempty"`
-	Page       int `json:"p,omitempty"`
-	Pagesize   int `json:"ps,omitempty"`
-	OrderBy    string `json:"ob,omitempty"`
-	Select     string `json:"s,omitempty"`
+	Page       int          `json:"p,omitempty"`
+	Pagesize   int          `json:"ps,omitempty"`
+	OrderBy    string       `json:"ob,omitempty"`
+	Select     string       `json:"s,omitempty"`
 }
 
 func (s *Selector) ToBytes() []byte {
@@ -140,6 +140,10 @@ func NewSelector(r ...Requirement) Selector {
 	}
 	s.AddQuery(r...)
 	return s
+}
+
+func (s *Selector) Len() int {
+	return len(s.Query)
 }
 
 func (s *Selector) Patch() (string, interface{}) {

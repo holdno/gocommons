@@ -6,6 +6,14 @@ import (
 	"strings"
 )
 
+type User struct {
+	Name string `a:"name"`
+}
+
+type Man struct {
+	Car int `a:"name"`
+}
+
 var tagname = "json"
 
 var (
