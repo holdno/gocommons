@@ -113,7 +113,7 @@ func (r *Requirement) Patch() (string, interface{}) {
 
 type Selector struct {
 	queryIndex int
-	Query      Requirements `json:"q,omitempty"`
+	query      Requirements `json:"q,omitempty"`
 	Page       int          `json:"p,omitempty"`
 	Pagesize   int          `json:"ps,omitempty"`
 	OrderBy    string       `json:"ob,omitempty"`
@@ -143,24 +143,29 @@ func NewSelector(r ...Requirement) Selector {
 }
 
 func (s *Selector) Len() int {
-	return len(s.Query)
+	return len(s.query)
 }
 
 func (s *Selector) Patch() (string, interface{}) {
 	i := s.queryIndex - 1
-	return s.Query[i].Patch()
+	return s.query[i].Patch()
+}
+
+func (s *Selector) GetCurrentQuery() Requirement {
+	i := s.queryIndex - 1
+	return s.query[i]
 }
 
 func (s *Selector) NextQuery() bool {
 	s.queryIndex++
-	if len(s.Query) < s.queryIndex {
+	if len(s.query) < s.queryIndex {
 		return false
 	}
 	return true
 }
 
 func (s *Selector) AddQuery(r ...Requirement) {
-	s.Query = append(s.Query, r...)
+	s.query = append(s.query, r...)
 }
 
 func (s *Selector) AddOrder(str string) {
