@@ -183,10 +183,10 @@ func (s *Selector) AddOrder(str string) {
 }
 
 func (s Selector) AddSelect(str string) Selector {
-	if s.OrderBy != "" {
-		s.OrderBy += "," + str
+	if s.Select != "" {
+		s.Select += "," + str
 	} else {
-		s.OrderBy = str
+		s.Select = str
 	}
 	return s
 }
