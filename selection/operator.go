@@ -17,17 +17,19 @@ func init() {
 type Operator string
 
 const (
-	DoesNotExist    Operator = "!"
-	Equals          Operator = "="
-	EqualString     Operator = "'='"
-	DoubleEquals    Operator = "=="
-	In              Operator = "IN"
-	NotEquals       Operator = "!="
-	NotEqualsString Operator = "'!='"
-	NotIn           Operator = "NOT IN"
-	GreaterThan     Operator = ">"
-	LessThan        Operator = "<"
-	Like            Operator = "LIKE"
+	DoesNotExist     Operator = "!"
+	Equals           Operator = "="
+	EqualString      Operator = "'='"
+	DoubleEquals     Operator = "=="
+	In               Operator = "IN"
+	NotEquals        Operator = "!="
+	NotEqualsString  Operator = "'!='"
+	NotIn            Operator = "NOT IN"
+	GreaterThan      Operator = ">"
+	GreaterThanEqual Operator = ">="
+	LessThan         Operator = "<"
+	LessThanEqual    Operator = "<="
+	Like             Operator = "LIKE"
 )
 
 // Requirement contains values, a key, and an operator that relates the key and values.
@@ -91,8 +93,12 @@ func (r *Requirement) Patch() (string, interface{}) {
 		buffer.WriteString(" NOT IN (")
 	case GreaterThan:
 		buffer.WriteString(">")
+	case GreaterThanEqual:
+		buffer.WriteString(">=")
 	case LessThan:
 		buffer.WriteString("<")
+	case LessThanEqual:
+		buffer.WriteString("<=")
 	case Like:
 		buffer.WriteString(" LIKE ")
 		//case Exists, DoesNotExist:
