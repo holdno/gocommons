@@ -28,6 +28,7 @@ const (
 	GreaterThan     Operator = ">"
 	LessThan        Operator = "<"
 	Like            Operator = "LIKE"
+	FindIn          Operator = "FIND_IN_SET"
 )
 
 // Requirement contains values, a key, and an operator that relates the key and values.
@@ -76,7 +77,10 @@ func (r *Requirement) Patch() (string, interface{}) {
 	if r.Operator == DoesNotExist {
 		buffer.WriteString("!")
 	}
-	buffer.WriteString(r.Key)
+
+	if r.Operator != FindIn {
+		buffer.WriteString(r.Key)
+	}
 
 	switch r.Operator {
 	case Equals, EqualString:
@@ -97,12 +101,18 @@ func (r *Requirement) Patch() (string, interface{}) {
 		buffer.WriteString(" LIKE ")
 		//case Exists, DoesNotExist:
 		//	return buffer.String()
+	case FindIn:
+		buffer.WriteString(" FIND_IN_SET(")
 	}
 
-	buffer.WriteString("?")
+	if r.Operator != FindIn {
+		buffer.WriteString("?")
+	} else {
+		buffer.WriteString(r.Key + ",?")
+	}
 
 	switch r.Operator {
-	case In, NotIn:
+	case In, NotIn, FindIn:
 		buffer.WriteString(")")
 	case Like:
 		return buffer.String(), fmt.Sprintf("%%%v%%", r.Values)
