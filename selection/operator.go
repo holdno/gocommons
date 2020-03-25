@@ -17,18 +17,20 @@ func init() {
 type Operator string
 
 const (
-	DoesNotExist    Operator = "!"
-	Equals          Operator = "="
-	EqualString     Operator = "'='"
-	DoubleEquals    Operator = "=="
-	In              Operator = "IN"
-	NotEquals       Operator = "!="
-	NotEqualsString Operator = "'!='"
-	NotIn           Operator = "NOT IN"
-	GreaterThan     Operator = ">"
-	LessThan        Operator = "<"
-	Like            Operator = "LIKE"
-	FindIn          Operator = "FIND_IN_SET"
+	DoesNotExist     Operator = "!"
+	Equals           Operator = "="
+	EqualString      Operator = "'='"
+	DoubleEquals     Operator = "=="
+	In               Operator = "IN"
+	NotEquals        Operator = "!="
+	NotEqualsString  Operator = "'!='"
+	NotIn            Operator = "NOT IN"
+	GreaterThan      Operator = ">"
+	GreaterThanEqual Operator = ">="
+	LessThan         Operator = "<"
+	LessThanEqual    Operator = "<="
+	Like             Operator = "LIKE"
+	FindIn           Operator = "FIND_IN_SET"
 )
 
 // Requirement contains values, a key, and an operator that relates the key and values.
@@ -95,8 +97,12 @@ func (r *Requirement) Patch() (string, interface{}) {
 		buffer.WriteString(" NOT IN (")
 	case GreaterThan:
 		buffer.WriteString(">")
+	case GreaterThanEqual:
+		buffer.WriteString(">=")
 	case LessThan:
 		buffer.WriteString("<")
+	case LessThanEqual:
+		buffer.WriteString("<=")
 	case Like:
 		buffer.WriteString(" LIKE ")
 		//case Exists, DoesNotExist:
@@ -187,10 +193,10 @@ func (s *Selector) AddOrder(str string) {
 }
 
 func (s Selector) AddSelect(str string) Selector {
-	if s.OrderBy != "" {
-		s.OrderBy += "," + str
+	if s.Select != "" {
+		s.Select += "," + str
 	} else {
-		s.OrderBy = str
+		s.Select = str
 	}
 	return s
 }
