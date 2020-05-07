@@ -134,6 +134,7 @@ type Selector struct {
 	Pagesize   int          `json:"ps,omitempty"`
 	OrderBy    string       `json:"ob,omitempty"`
 	Select     string       `json:"s,omitempty"`
+	GroupBy    string       `json:"g,omitempty"`
 }
 
 func (s *Selector) ToBytes() []byte {
@@ -189,6 +190,14 @@ func (s *Selector) AddOrder(str string) {
 		s.OrderBy += "," + str
 	} else {
 		s.OrderBy = str
+	}
+}
+
+func (s *Selector) AddGroup(str string) {
+	if s.GroupBy != "" {
+		s.GroupBy += "," + str
+	} else {
+		s.GroupBy = str
 	}
 }
 
