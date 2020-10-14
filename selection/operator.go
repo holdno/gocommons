@@ -30,6 +30,7 @@ const (
 	LessThan         Operator = "<"
 	LessThanEqual    Operator = "<="
 	Like             Operator = "LIKE"
+	FindIn           Operator = "FIND_IN_SET"
 )
 
 // Requirement contains values, a key, and an operator that relates the key and values.
@@ -78,7 +79,10 @@ func (r *Requirement) Patch() (string, interface{}) {
 	if r.Operator == DoesNotExist {
 		buffer.WriteString("!")
 	}
-	buffer.WriteString(r.Key)
+
+	if r.Operator != FindIn {
+		buffer.WriteString(r.Key)
+	}
 
 	switch r.Operator {
 	case Equals, EqualString:
@@ -103,12 +107,18 @@ func (r *Requirement) Patch() (string, interface{}) {
 		buffer.WriteString(" LIKE ")
 		//case Exists, DoesNotExist:
 		//	return buffer.String()
+	case FindIn:
+		buffer.WriteString(" FIND_IN_SET(")
 	}
 
-	buffer.WriteString("?")
+	if r.Operator != FindIn {
+		buffer.WriteString("?")
+	} else {
+		buffer.WriteString(r.Key + ",?")
+	}
 
 	switch r.Operator {
-	case In, NotIn:
+	case In, NotIn, FindIn:
 		buffer.WriteString(")")
 	case Like:
 		return buffer.String(), fmt.Sprintf("%%%v%%", r.Values)
@@ -124,6 +134,7 @@ type Selector struct {
 	Pagesize   int          `json:"ps,omitempty"`
 	OrderBy    string       `json:"ob,omitempty"`
 	Select     string       `json:"s,omitempty"`
+	GroupBy    string       `json:"g,omitempty"`
 }
 
 func (s *Selector) ToBytes() []byte {
@@ -182,11 +193,18 @@ func (s *Selector) AddOrder(str string) {
 	}
 }
 
-func (s *Selector) AddSelect(str string) Selector {
+func (s *Selector) AddGroup(str string) {
+	if s.GroupBy != "" {
+		s.GroupBy += "," + str
+	} else {
+		s.GroupBy = str
+	}
+}
+
+func (s *Selector) AddSelect(str string) {
 	if s.Select != "" {
 		s.Select += "," + str
 	} else {
 		s.Select = str
 	}
-	return s
 }
