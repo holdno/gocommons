@@ -182,7 +182,7 @@ func (s *Selector) AddOrder(str string) {
 	}
 }
 
-func (s Selector) AddSelect(str string) Selector {
+func (s *Selector) AddSelect(str string) Selector {
 	if s.Select != "" {
 		s.Select += "," + str
 	} else {
