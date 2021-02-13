@@ -114,7 +114,7 @@ func (r *Requirement) Patch() (string, interface{}) {
 	if r.Operator != FindIn {
 		buffer.WriteString("?")
 	} else {
-		buffer.WriteString(r.Key + ",?")
+		buffer.WriteString("?," + "`" + r.Key + "`")
 	}
 
 	switch r.Operator {
